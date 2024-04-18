@@ -1,12 +1,14 @@
 from django import forms
-from .models import Prodect, User
+from .models import Product, Userr
 
-class ProdectForm(forms.ModelForm):
+
+class ProductForm(forms.ModelForm):
     class Meta:
-        model = Prodect
+        model = Product
         fields = ['name', 'description', 'price', 'category', 'photo']
 
+        
 class UserForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = Userr
         fields = ['user_name','password']

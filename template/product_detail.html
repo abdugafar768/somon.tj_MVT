@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon Style Product List</title>
+    <title>Product Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -25,40 +25,54 @@
         h1 {
             text-align: center;
             margin-bottom: 20px;
+            color: #333;
         }
 
         .product {
-            display: flex;
-            align-items: center;
-            padding: 20px;
             margin-bottom: 20px;
+            padding: 20px;
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .product img {
-            max-width: 150px;
+            max-width: 100%;
             height: auto;
+            display: block;
+            margin: 0 auto 20px;
             border-radius: 5px;
-            margin-right: 20px;
         }
 
-        .product-info {
-            flex: 1;
-        }
-
-        .product-info h2 {
-            margin-top: 0;
+        .product p {
             margin-bottom: 10px;
         }
 
-        .product-info p {
-            margin: 0;
-            margin-bottom: 10px;
+        .product p.price {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #008000;
         }
 
-        /* Navbar */
+        /* Form ve buton stilini belirle */
+        form {
+            text-align: center;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
         .navbar {
             background-color: #232f3e;
             overflow: hidden;
@@ -81,11 +95,13 @@
         .navbar a.active {
             background-color: #666;
         }
-
     </style>
 </head>
 
 <body>
+
+
+
     <div class="navbar">
         <a href="{% url 'prodectlist' %}">Home</a>
         <a href="{% url 'add_product' %}">Add Product</a>
@@ -93,26 +109,21 @@
     </div>
 
     <div class="container">
-        <h1>Product List</h1>
-        <div class="products">
-            {% for product in object_list %}
-            <a href="{% url "product_detail" product.pk %}" style="text-decoration: none; color: black;">
-                <div class="product">
-                    {% if product.photo %}
-                    <img src="{{ product.photo.url }}" alt="{{ product.name }}">
-                    {% else %}
-                    <div class="no-photo">No Photo Available</div>
-                    {% endif %}
-                    <div class="product-info">
-                        <h2>{{ product.name }}</h2>
-                        <p>{{ product.description }}</p>
-                        <p>Price: ${{ product.price }}</p>
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
+        <h1>{{ object.name }}</h1>
+        <div class="product">
+            <img src="{{ object.photo.url }}" alt="{{ object.name }}">
+            <p>{{ object.description }}</p>
+            <p class="price">Price: ${{ object.price }}</p>
+            <form action="{% url 'basket_create' %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ object.pk }}">
+                <button type="submit">Add to Basket</button>
+            </form>
+            <form action="{% url 'delete_product' object.pk %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>   
         </div>
     </div>
 </body>
-
 </html>

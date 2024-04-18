@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category
+from .models import Category , Basket
 
 admin.site.register(Category)
-# Register your models here.
+admin.site.register(Basket)
+
